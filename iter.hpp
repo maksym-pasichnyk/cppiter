@@ -2,10 +2,13 @@
 
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range-v3/include/range/v3/all.hpp>
 
 namespace cppiter {
 	template <typename T>
 	struct Iterator : T {
+		using Item = decltype(*std::declval<T>().begin());
+
 		template <typename Fn>
 		inline constexpr auto where(Fn&& fn) noexcept {
 			return cppiter::Iterator{ranges::views::filter(*this, std::forward<Fn>(fn))};
@@ -14,6 +17,15 @@ namespace cppiter {
 		template <typename Fn>
 		inline constexpr auto map(Fn&& fn) noexcept {
 			return cppiter::Iterator{ranges::views::transform(*this, std::forward<Fn>(fn))};
+		}
+
+		template <typename Tp>
+		inline constexpr Tp to() noexcept {
+			return ranges::to<Tp>(*this);
+		}
+
+		inline constexpr auto collect() noexcept {
+			return ranges::to<std::vector<Item>>(*this);
 		}
 	};
 
