@@ -2,7 +2,7 @@
 
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range-v3/include/range/v3/all.hpp>
+#include <range/v3/all.hpp>
 
 namespace cppiter {
 	template <typename T>
@@ -17,6 +17,11 @@ namespace cppiter {
 		template <typename Fn>
 		inline constexpr auto map(Fn&& fn) noexcept {
 			return cppiter::Iterator{ranges::views::transform(*this, std::forward<Fn>(fn))};
+		}
+
+		template <typename U>
+		inline constexpr auto zip(Iterator<U> iter) noexcept {
+			return cppiter::Iterator{ranges::views::zip(*this, iter)};
 		}
 
 		template <typename Tp>
